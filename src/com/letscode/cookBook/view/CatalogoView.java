@@ -9,7 +9,7 @@ import java.util.Scanner;
 public class CatalogoView {
     private final Receita NONE_FOUND = new Receita("Nenhuma receita encontrada", Categoria.PRATO_UNICO);
     private Receita receita;
-    Catalogo controller;
+    Catalogo controller = new Catalogo();
     private int curIndex = -1;
 
     private void showHeader() {
@@ -29,26 +29,53 @@ public class CatalogoView {
     private void showAnterior() {
         if (curIndex > 0) {
             this.receita = controller.getReceita(curIndex - 1);
-            if (receita != null) curIndex--;
+            if (receita != null) {
+                curIndex--;
+                //showReceita(this.receita);
+            }
         }
+        show();
     }
 
     private void showSeguinte() {
         this.receita = controller.getReceita(curIndex + 1);
-        if (receita != null) curIndex++;
+        if (receita != null) {
+            curIndex++;
+            //showReceita(this.receita);
+        }
+        show();
     }
 
     private void add() {
         //TODO: Implement Add
+        NovaReceitaView novaReceitaView = new NovaReceitaView();
+        novaReceitaView.createNewReceita();
+        Receita receita = novaReceitaView.getReceita();
+        controller.add(receita);
+        show();
     }
 
     private void del() {
         if (curIndex >= 0) {
             controller.del(receita.getNome());
         }
+        show();
     }
 
+    private void search(){
+        System.out.println("Digite o nome da Receita: ");
+        String nome = new Scanner(System.in).nextLine();
+        Receita receita = controller.getReceita(nome);
+        if (receita != null){
+            curIndex = controller.getIndexReceita(receita);
+            show();
+        }
+        show();
+    }
+
+
     public void show() {
+        ScreenUtil.clearScreen();
         showHeader();
         showReceita(receita == null ? NONE_FOUND : receita);
         ScreenUtil.printTextLine("", 80, true, '=');
@@ -76,7 +103,7 @@ public class CatalogoView {
                     del();
                     break;
                 case "S":
-                    //TODO: Implement Search
+                    search();
                     break;
                 default:
                     ScreenUtil.printTextLine("Opção inválida", 80);

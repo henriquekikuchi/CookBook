@@ -13,6 +13,10 @@ public class Catalogo {
         receitas = new ArrayList<>();
     }
 
+    public int getIndexReceita(Receita receita){
+        return this.receitas.indexOf(receita);
+    }
+
     public void add(Receita nova) {
         if (nova != null && !nova.getNome().isBlank()) {
             if (!receitas.contains(nova)) {
